@@ -7,10 +7,16 @@ fn main() -> Result<()> {
 
     let (location_ids_left, location_ids_right) =
         parser::parse_location_ids(&puzzle_input);
+
     let total_distance =
-        total_distance(location_ids_left, location_ids_right);
+        total_distance(location_ids_left.clone(), location_ids_right.clone());
 
     println!("Total distance between the lists: {}", total_distance);
+
+    let total_similarity =
+        total_similarity(&location_ids_left, &location_ids_right);
+
+    println!("Total similarity between the lists: {}", total_similarity);
 
     Ok(())
 }
