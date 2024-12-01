@@ -24,6 +24,8 @@ fn parse_line(line: &str) -> (i32, i32) {
 
 #[cfg(test)]
 mod tests {
+    use crate::TEST_DATA;
+
     use super::{parse_line, parse_location_ids};
 
     #[test]
@@ -35,14 +37,6 @@ mod tests {
     fn parse_location_ids_should_return_vecs() {
         assert_eq!((vec![3], vec![4]), parse_location_ids("3   4"));
     }
-
-    const TEST_DATA: &str =
-r"3   4
-4   3
-2   5
-1   3
-3   9
-3   3";
 
     #[test]
     fn parse_location_ids_should_parse_test_data() {
