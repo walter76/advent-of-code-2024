@@ -15,6 +15,20 @@ fn main() -> Result<()> {
     Ok(())
 }
 
+fn total_similarity(location_ids_left: &[i32], location_ids_right: &[i32])
+    -> i32
+{
+    location_ids_left.iter()
+        .map(|id| similarity(*id, location_ids_right)).sum()
+}
+
+fn similarity(location_id: i32, location_ids_right: &[i32]) -> i32 {
+    let no_of_occurences =
+        location_ids_right.iter().filter(|&id| *id == location_id).count();
+
+    no_of_occurences as i32 *location_id
+}
+
 fn total_distance(
     mut location_ids_left: Vec<i32>, mut location_ids_right: Vec<i32>
 ) -> i32 {
@@ -47,7 +61,7 @@ r"3   4
 
 #[cfg(test)]
 mod tests {
-    use crate::{distance, parser::parse_location_ids, total_distance, TEST_DATA};
+    use crate::{distance, parser::parse_location_ids, similarity, total_distance, total_similarity, TEST_DATA};
 
     #[test]
     fn distance_should_return_2_for_pair_1_and_3() {
@@ -65,5 +79,29 @@ mod tests {
             parse_location_ids(TEST_DATA);
 
         assert_eq!(11, total_distance(location_ids_left, location_ids_right));
+    }
+
+    #[test]
+    fn similarity_for_3_and_test_data_should_be_9() {
+        let (_, location_ids_right) = parse_location_ids(TEST_DATA);
+
+        assert_eq!(9, similarity(3, &location_ids_right));
+    }
+
+    #[test]
+    fn similarity_for_2_and_test_data_should_be_0() {
+        let (_, location_ids_right) = parse_location_ids(TEST_DATA);
+
+        assert_eq!(0, similarity(2, &location_ids_right));
+    }
+
+    #[test]
+    fn total_similarity_for_test_data_should_be_31() {
+        let (location_ids_left, location_ids_right) =
+            parse_location_ids(TEST_DATA);
+
+        assert_eq!(
+            31,
+            total_similarity(&location_ids_left, &location_ids_right));
     }
 }
