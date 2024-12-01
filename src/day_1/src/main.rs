@@ -1,7 +1,18 @@
 mod parser;
 
-fn main() {
-    println!("Hello, world!");
+use anyhow::Result;
+
+fn main() -> Result<()> {
+    let puzzle_input = aoc_core::get_input(2024, 1)?;
+
+    let (location_ids_left, location_ids_right) =
+        parser::parse_location_ids(&puzzle_input);
+    let total_distance =
+        total_distance(location_ids_left, location_ids_right);
+
+    println!("Total distance between the lists: {}", total_distance);
+
+    Ok(())
 }
 
 fn total_distance(
