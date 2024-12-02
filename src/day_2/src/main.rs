@@ -7,14 +7,21 @@ fn main() -> Result<()> {
     let puzzle_input = aoc_core::get_input(2024, 2)?;
 
     let reports = parser::parse_reports(&puzzle_input);
-    let number_of_safe_reports = count_safe_reports(reports);
+    let number_of_safe_reports = count_safe_reports(&reports);
 
     println!("Number of safe reports: {}", number_of_safe_reports);
+
+    let number_of_safe_reports = 
+        count_safe_reports_with_problem_dampener_active(&reports);
+
+    println!(
+        "Number of safe reports (problem dampener active): {}",
+        number_of_safe_reports);
 
     Ok(())
 }
 
-fn count_safe_reports_with_problem_dampener_active(reports: Vec<Vec<i32>>)
+fn count_safe_reports_with_problem_dampener_active(reports: &Vec<Vec<i32>>)
     -> usize
 {
     let mut number_of_safe_reports = 0;
@@ -31,7 +38,7 @@ fn count_safe_reports_with_problem_dampener_active(reports: Vec<Vec<i32>>)
 }
 
 fn is_safe_with_problem_dampener(report: &Vec<i32>) -> bool {
-    for i in 1 .. report.len() {
+    for i in 0 .. report.len() {
         let mut report_with_level_removed = report.clone();
 
         report_with_level_removed.remove(i);
@@ -44,7 +51,7 @@ fn is_safe_with_problem_dampener(report: &Vec<i32>) -> bool {
     false
 }
 
-fn count_safe_reports(reports: Vec<Vec<i32>>) -> usize {
+fn count_safe_reports(reports: &Vec<Vec<i32>>) -> usize {
     reports.iter()
         .map(|report| report_checker::is_safe_report(report))
         .filter(|is_safe| *is_safe)
@@ -60,7 +67,7 @@ mod tests {
         assert_eq!(
             2,
             count_safe_reports(
-                vec![
+                &vec![
                     vec![7, 6, 4, 2, 1],
                     vec![1, 2, 7, 8, 9],
                     vec![9, 7, 6, 2, 1],
@@ -97,7 +104,7 @@ mod tests {
         assert_eq!(
             4,
             count_safe_reports_with_problem_dampener_active(
-                vec![
+                &vec![
                     vec![7, 6, 4, 2, 1],
                     vec![1, 2, 7, 8, 9],
                     vec![9, 7, 6, 2, 1],
