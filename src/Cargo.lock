@@ -70,6 +70,10 @@ dependencies = [
 [[package]]
 name = "day_2"
 version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "aoc-core",
+]
 
 [[package]]
 name = "dirs"
