@@ -1,16 +1,9 @@
-pub fn count_safe_reports(reports: Vec<Vec<i32>>) -> usize {
-    reports.iter()
-        .map(|report| is_safe_report(report))
-        .filter(|is_safe| *is_safe)
-        .count()
-}
-
 enum Status {
     Increasing,
     Decreasing,
 }
 
-fn is_safe_report(report: &[i32]) -> bool {
+pub fn is_safe_report(report: &[i32]) -> bool {
     let mut level_iterator = report.iter().peekable();
     let mut status = None;
 
@@ -49,7 +42,7 @@ fn has_max_distance_of_three(a: &i32, b: &i32) -> bool {
 
 #[cfg(test)]
 mod tests {
-    use super::{count_safe_reports, is_safe_report};
+    use super::is_safe_report;
 
     #[test]
     fn is_safe_report_should_return_true_for_7_6_4_2_1() {
@@ -79,22 +72,5 @@ mod tests {
     #[test]
     fn is_safe_report_should_return_true_for_1_3_6_7_9() {
         assert!(is_safe_report(&vec![1, 3, 6, 7, 9]));
-    }
-
-    #[test]
-    fn count_safe_reports_should_return_2_for_test_data() {
-        assert_eq!(
-            2,
-            count_safe_reports(
-                vec![
-                    vec![7, 6, 4, 2, 1],
-                    vec![1, 2, 7, 8, 9],
-                    vec![9, 7, 6, 2, 1],
-                    vec![1, 3, 2, 4, 5],
-                    vec![8, 6, 4, 4, 1],
-                    vec![1, 3, 6, 7, 9],
-                ],
-            )
-        );
     }
 }
