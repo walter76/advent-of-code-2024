@@ -4,6 +4,14 @@ fn main() {
     println!("Hello, world!");
 }
 
+fn sum_uncorrupted_mul_instructions(puzzle_input: &str) -> i32 {
+    parse(puzzle_input)
+        .unwrap()
+        .iter()
+        .map(|(num1, num2)| num1 * num2)
+        .sum()
+}
+
 fn parse(puzzle_input: &str) -> Option<Vec<(i32, i32)>> {
     let re = Regex::new(r"mul\((\d{1,3}),(\d{1,3})\)").unwrap();
     
@@ -24,7 +32,7 @@ fn parse(puzzle_input: &str) -> Option<Vec<(i32, i32)>> {
 
 #[cfg(test)]
 mod tests {
-    use crate::parse;
+    use crate::{parse, sum_uncorrupted_mul_instructions};
 
     #[test]
     fn parse_should_parse_regular_mul_instructions() {
@@ -53,5 +61,10 @@ mod tests {
             ]),
             parse(TEST_DATA)
         );
+    }
+
+    #[test]
+    fn sum_uncorrupted_mul_instructions_should_return_161_for_test_data() {
+        assert_eq!(161, sum_uncorrupted_mul_instructions(TEST_DATA));
     }
 }
