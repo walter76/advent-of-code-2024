@@ -6,7 +6,7 @@ pub fn parse(puzzle_input: &str) -> Option<Vec<(i32, i32)>> {
     let result: Vec<(i32,i32)> = re.captures_iter(puzzle_input)
         .map(|cap| {
             let num1: i32 = cap[1].parse().expect("Failed to parse num1");
-            let num2: i32 = cap[2].parse().expect("Failed to parse num1");
+            let num2: i32 = cap[2].parse().expect("Failed to parse num2");
             (num1, num2)
         })
         .collect();

@@ -1,3 +1,4 @@
+mod instructions_parser;
 mod mul_parser;
 
 use anyhow::Result;
