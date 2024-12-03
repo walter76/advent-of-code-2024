@@ -1,7 +1,14 @@
+use anyhow::Result;
 use regex::Regex;
 
-fn main() {
-    println!("Hello, world!");
+fn main() -> Result<()> {
+    let puzzle_input = aoc_core::get_input(2024, 3)?;
+
+    let sum = sum_uncorrupted_mul_instructions(&puzzle_input);
+
+    println!("The sum of all uncorrupted mul instructions in the input is: {}", sum);
+
+    Ok(())
 }
 
 fn sum_uncorrupted_mul_instructions(puzzle_input: &str) -> i32 {
