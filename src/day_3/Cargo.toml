@@ -6,4 +6,5 @@ edition = "2021"
 [dependencies]
 anyhow = "1.0"
 aoc-core = { path = "../aoc-core" }
+regex = "1.11"
 
