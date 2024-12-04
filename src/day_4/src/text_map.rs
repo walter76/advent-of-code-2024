@@ -13,6 +13,14 @@ impl TextMap {
     fn index_of(&self, x: usize, y: usize) -> usize {
         y * self.width + x
     }
+
+    pub fn width(&self) -> usize {
+        self.width
+    }
+
+    pub fn height(&self) -> usize {
+        self.height
+    }
 }
 
 impl From<&str> for TextMap {
