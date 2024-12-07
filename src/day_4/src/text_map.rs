@@ -1,3 +1,5 @@
+use aoc_core::primitives::Rect;
+
 #[derive(Debug, Clone, Eq, PartialEq)]
 pub struct TextMap {
     data: Vec<char>,
@@ -118,6 +120,27 @@ impl TextMap {
 
         result
     }
+
+    pub fn rect(&self, r: Rect) -> TextMap {
+        if r.x2 < r.x1 || r.y2 < r.y1 {
+            panic!("Only rectangles allowed, where the rectangle is normalized (x2 < x1 || y2 < y1): {:?}", r);
+        }
+
+        if r.x2 > self.width - 1 || r.y2 > self.height - 1 {
+            panic!("Rectangle is out of bounds: r={:?} (width={}, height={})", r, self.width, self.height);
+        }
+
+        let mut result = String::new();
+
+        for y in r.y1..=r.y2 {
+            for x in r.x2..=r.x2 {
+                result.push(self.char_at(x, y));
+            }
+        }
+
+        TextMap::from(result.as_str())
+    }
+
 }
 
 impl From<&str> for TextMap {
