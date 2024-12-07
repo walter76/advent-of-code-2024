@@ -7,3 +7,30 @@ pub struct Position {
     /// The y-coordinate of the position.
     pub y: usize,
 }
+
+/// A rectangle.
+#[derive(Debug, Clone, Copy, Eq, PartialEq)]
+pub struct Rect {
+    /// The x-coordinate of the upper left corner.
+    pub x1: usize,
+
+    /// The y-coordinate of the upper left corner.
+    pub y1: usize,
+
+    /// The x-coordinate of the lower right corner.
+    pub x2: usize,
+
+    /// The y-coordinate of the lower right corner.
+    pub y2: usize,
+}
+
+impl Rect {
+    pub fn new(x1: usize, y1: usize, x2: usize, y2: usize) -> Self {
+        Self {
+            x1,
+            y1,
+            x2,
+            y2,
+        }
+    }
+}

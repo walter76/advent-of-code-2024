@@ -1,28 +1,22 @@
 mod text_map;
 
-use core::num;
-
 use anyhow::Result;
 
+use aoc_core::primitives::Rect;
 use text_map::TextMap;
 
 fn main() -> Result<()> {
     let puzzle_input = aoc_core::get_input(2024, 4)?;
 
     let text_map = TextMap::from(puzzle_input.as_str());
-    let number_of_xmas = find_all_xmas(&text_map).unwrap();
+    let all_occurences_of_xmas = find_all_xmas(&text_map).unwrap();
+    let number_of_occurences = all_occurences_of_xmas.len();
 
-    println!("Number of occurences of XMAS in input is: {}", number_of_xmas.len());
+    println!("Number of occurences of XMAS in input is: {}", number_of_occurences);
 
+    assert_eq!(2406, number_of_occurences);
+    
     Ok(())
-}
-
-#[derive(Debug, Eq, PartialEq, Clone)]
-struct Rect {
-    x1: usize,
-    y1: usize,
-    x2: usize,
-    y2: usize,
 }
 
 fn find_all_xmas(text_map: &TextMap) -> Option<Vec<Rect>> {
