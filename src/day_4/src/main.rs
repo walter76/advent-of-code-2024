@@ -51,7 +51,7 @@ fn find_all_xmas(text_map: &TextMap) -> Option<Vec<Rect>> {
 
                 // compare with 'XMAS'
                 if slice == "XMAS" {
-                    occurences.push(Rect {x1, y1, x2, y2});
+                    occurences.push(Rect::new(x1, y1, x2, y2));
                 }
             }
 
@@ -72,7 +72,7 @@ fn find_all_xmas(text_map: &TextMap) -> Option<Vec<Rect>> {
 
                 // compare with 'XMAS'
                 if slice == "XMAS" {
-                    occurences.push(Rect {x1, y1, x2, y2});
+                    occurences.push(Rect::new(x1, y1, x2, y2));
                 }
             }
 
@@ -90,7 +90,7 @@ fn find_all_xmas(text_map: &TextMap) -> Option<Vec<Rect>> {
 
                 // compare with 'XMAS'
                 if slice == "XMAS" {
-                    occurences.push(Rect {x1, y1, x2, y2});
+                    occurences.push(Rect::new(x1, y1, x2, y2));
                 }
             }
 
@@ -111,7 +111,7 @@ fn find_all_xmas(text_map: &TextMap) -> Option<Vec<Rect>> {
 
                 // compare with 'XMAS'
                 if slice == "XMAS" {
-                    occurences.push(Rect {x1, y1, x2, y2});
+                    occurences.push(Rect::new(x1, y1, x2, y2));
                 }
             }
 
@@ -129,7 +129,7 @@ fn find_all_xmas(text_map: &TextMap) -> Option<Vec<Rect>> {
 
                 // compare with 'XMAS'
                 if slice == "XMAS" {
-                    occurences.push(Rect {x1, y1, x2, y2});
+                    occurences.push(Rect::new(x1, y1, x2, y2));
                 }
             }
 
@@ -152,7 +152,7 @@ fn find_all_xmas(text_map: &TextMap) -> Option<Vec<Rect>> {
 
                 // compare with 'XMAS'
                 if slice == "XMAS" {
-                    occurences.push(Rect {x1, y1, x2, y2});
+                    occurences.push(Rect::new(x1, y1, x2, y2));
                 }
             }
 
@@ -170,7 +170,7 @@ fn find_all_xmas(text_map: &TextMap) -> Option<Vec<Rect>> {
 
                 // compare with 'XMAS'
                 if slice == "XMAS" {
-                    occurences.push(Rect {x1, y1, x2, y2});
+                    occurences.push(Rect::new(x1, y1, x2, y2));
                 }
             }
 
@@ -193,7 +193,7 @@ fn find_all_xmas(text_map: &TextMap) -> Option<Vec<Rect>> {
 
                 // compare with 'XMAS'
                 if slice == "XMAS" {
-                    occurences.push(Rect {x1, y1, x2, y2});
+                    occurences.push(Rect::new(x1, y1, x2, y2));
                 }
             }
         }
