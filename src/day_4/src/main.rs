@@ -93,7 +93,7 @@ fn find_all_xmas(text_map: &TextMap) -> Option<Vec<Rect>> {
             }
 
             // check SOUTH-EAST
-            if y < text_map.height() -3 && x < text_map.width() - 3 {
+            if y < text_map.height() - 3 && x < text_map.width() - 3 {
                 let x1 = x;
                 let y1 = y;
                 let x2 = x + 3;
@@ -116,7 +116,7 @@ fn find_all_xmas(text_map: &TextMap) -> Option<Vec<Rect>> {
             }
 
             // check SOUTH
-            if y < text_map.height() {
+            if y < text_map.height() - 3 {
                 let x1 = x;
                 let y1 = y;
                 let x2 = x;
