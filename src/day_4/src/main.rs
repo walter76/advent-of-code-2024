@@ -331,4 +331,24 @@ SAMX......";
             vec![Rect {x1: 3, y1: 3, x2: 0, y2: 0}],
             find_all_xmas(&text_map).unwrap());
     }
+
+    const EXAMPLE_DATA: &str = r"MMMSXXMASM
+MSAMXMSMSA
+AMXSXMAAMM
+MSAMASMSMX
+XMASAMXAMM
+XXAMMXXAMA
+SMSMSASXSS
+SAXAMASAAA
+MAMMMXMMMM
+MXMXAXMASX";
+
+    #[test]
+    fn find_all_xmas_should_find_all_occurences_in_example_data() {
+        let text_map = TextMap::from(EXAMPLE_DATA);
+
+        assert_eq!(
+            18,
+            find_all_xmas(&text_map).unwrap().len());
+    }
 }
