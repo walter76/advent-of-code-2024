@@ -136,10 +136,74 @@ fn find_all_xmas(text_map: &TextMap) -> Option<Vec<Rect>> {
             }
 
             // check SOUTH-WEST
+            if y < text_map.height() - 3 && x >= 3 {
+                let x1 = x;
+                let y1 = y;
+                let x2 = x - 3;
+                let y2 = y + 3;
+
+                // get slice from (x1, y1) to (x2, y2)
+                let mut slice = String::new();
+
+                let mut xn = x1;
+                for yn in y1..=y2 {
+                    slice.push(text_map.char_at(xn, yn));
+
+                    if xn > 0 {
+                        xn -= 1;
+                    }
+                }
+
+                // compare with 'XMAS'
+                if slice == "XMAS" {
+                    occurences.push(Rect {x1, y1, x2, y2});
+                }
+            }
 
             // check WEST
+            if x >= 3 {
+                let x1 = x;
+                let y1 = y;
+                let x2 = x - 3;
+                let y2 = y;
+
+                // get slice from (x1, y1) to (x2, y2)
+                let mut slice = String::new();
+
+                for xn in (x2..=x1).rev() {
+                    slice.push(text_map.char_at(xn, y));
+                }
+
+                // compare with 'XMAS'
+                if slice == "XMAS" {
+                    occurences.push(Rect {x1, y1, x2, y2});
+                }
+            }
 
             // chest NORTH-WEST
+            if y >= 3 && x >= 3 {
+                let x1 = x;
+                let y1 = y;
+                let x2 = x - 3;
+                let y2 = y - 3;
+
+                // get slice from (x1, y1) to (x2, y2)
+                let mut slice = String::new();
+
+                let mut xn = x1;
+                for yn in (y2..=y1).rev() {
+                    slice.push(text_map.char_at(xn, yn));
+
+                    if xn > 0 {
+                        xn -= 1;
+                    }
+                }
+
+                // compare with 'XMAS'
+                if slice == "XMAS" {
+                    occurences.push(Rect {x1, y1, x2, y2});
+                }
+            }
         }
     }
 
@@ -226,4 +290,45 @@ const TEST_DATA_NORTH: &str = r"..S.......
             find_all_xmas(&text_map).unwrap());
     }
    
+    const TEST_DATA_SOUTH_WEST: &str = r"...X......
+..M.......
+.A........
+S.........";
+
+    #[test]
+    fn find_all_xmas_should_find_south_western_xmas() {
+        let text_map = TextMap::from(TEST_DATA_SOUTH_WEST);
+
+        assert_eq!(
+            vec![Rect {x1: 3, y1: 0, x2: 0, y2: 3}],
+            find_all_xmas(&text_map).unwrap());
+    }
+
+    const TEST_DATA_WEST: &str = r"..........
+..........
+..........
+SAMX......";
+
+    #[test]
+    fn find_all_xmas_should_find_western_xmas() {
+        let text_map = TextMap::from(TEST_DATA_WEST);
+
+        assert_eq!(
+            vec![Rect {x1: 3, y1: 3, x2: 0, y2: 3}],
+            find_all_xmas(&text_map).unwrap());
+    }
+
+    const TEST_DATA_NORTH_WEST: &str = r"S.........
+.A........
+..M.......
+...X......";
+    
+    #[test]
+    fn find_all_xmas_should_find_north_western_xmas() {
+        let text_map = TextMap::from(TEST_DATA_NORTH_WEST);
+
+        assert_eq!(
+            vec![Rect {x1: 3, y1: 3, x2: 0, y2: 0}],
+            find_all_xmas(&text_map).unwrap());
+    }
 }
