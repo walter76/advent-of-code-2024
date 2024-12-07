@@ -43,11 +43,7 @@ fn find_all_xmas(text_map: &TextMap) -> Option<Vec<Rect>> {
                 let y2 = y1 - 3;
 
                 // get slice from (x1, y1) to (x2, y2)
-                let mut slice = String::new();
-                
-                for yn in (y2..=y1).rev() {
-                    slice.push(text_map.char_at(x2, yn));
-                }
+                let slice = text_map.slice(x1, y1, x2, y2);
 
                 // compare with 'XMAS'
                 if slice == "XMAS" {
@@ -61,14 +57,7 @@ fn find_all_xmas(text_map: &TextMap) -> Option<Vec<Rect>> {
                 let y2 = y1 - 3;
 
                 // get slice from (x1, y1) to (x2, y2)
-                let mut slice = String::new();
-
-                let mut xn = x1;
-                for yn in (y2..=y1).rev() {
-                    slice.push(text_map.char_at(xn, yn));
-
-                    xn += 1;
-                }
+                let slice = text_map.slice(x1, y1, x2, y2);
 
                 // compare with 'XMAS'
                 if slice == "XMAS" {
@@ -82,11 +71,7 @@ fn find_all_xmas(text_map: &TextMap) -> Option<Vec<Rect>> {
                 let y2 = y1;
 
                 // get slice from (x1, y1) to (x2, y2)
-                let mut slice = String::new();
-
-                for xn in x1..=x2 {
-                    slice.push(text_map.char_at(xn, y1));
-                }
+                let slice = text_map.slice(x1, y1, x2, y2);
 
                 // compare with 'XMAS'
                 if slice == "XMAS" {
@@ -100,14 +85,7 @@ fn find_all_xmas(text_map: &TextMap) -> Option<Vec<Rect>> {
                 let y2 = y1 + 3;
 
                 // get slice from (x1, y1) to (x2, y2)
-                let mut slice = String::new();
-
-                let mut xn = x1;
-                for yn in y1..=y2 {
-                    slice.push(text_map.char_at(xn, yn));
-
-                    xn += 1;
-                }
+                let slice = text_map.slice(x1, y1, x2, y2);
 
                 // compare with 'XMAS'
                 if slice == "XMAS" {
@@ -121,11 +99,7 @@ fn find_all_xmas(text_map: &TextMap) -> Option<Vec<Rect>> {
                 let y2 = y1 + 3;
 
                 // get slice from (x1, y1) to (x2, y2)
-                let mut slice = String::new();
-
-                for yn in y1..=y2 {
-                    slice.push(text_map.char_at(x1, yn));
-                }
+                let slice = text_map.slice(x1, y1, x2, y2);
 
                 // compare with 'XMAS'
                 if slice == "XMAS" {
@@ -139,16 +113,7 @@ fn find_all_xmas(text_map: &TextMap) -> Option<Vec<Rect>> {
                 let y2 = y1 + 3;
 
                 // get slice from (x1, y1) to (x2, y2)
-                let mut slice = String::new();
-
-                let mut xn = x1;
-                for yn in y1..=y2 {
-                    slice.push(text_map.char_at(xn, yn));
-
-                    if xn > 0 {
-                        xn -= 1;
-                    }
-                }
+                let slice = text_map.slice(x1, y1, x2, y2);
 
                 // compare with 'XMAS'
                 if slice == "XMAS" {
@@ -162,11 +127,7 @@ fn find_all_xmas(text_map: &TextMap) -> Option<Vec<Rect>> {
                 let y2 = y1;
 
                 // get slice from (x1, y1) to (x2, y2)
-                let mut slice = String::new();
-
-                for xn in (x2..=x1).rev() {
-                    slice.push(text_map.char_at(xn, y1));
-                }
+                let slice = text_map.slice(x1, y1, x2, y2);
 
                 // compare with 'XMAS'
                 if slice == "XMAS" {
@@ -180,16 +141,7 @@ fn find_all_xmas(text_map: &TextMap) -> Option<Vec<Rect>> {
                 let y2 = y1 - 3;
 
                 // get slice from (x1, y1) to (x2, y2)
-                let mut slice = String::new();
-
-                let mut xn = x1;
-                for yn in (y2..=y1).rev() {
-                    slice.push(text_map.char_at(xn, yn));
-
-                    if xn > 0 {
-                        xn -= 1;
-                    }
-                }
+                let slice = text_map.slice(x1, y1, x2, y2);
 
                 // compare with 'XMAS'
                 if slice == "XMAS" {
