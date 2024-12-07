@@ -15,7 +15,7 @@ fn main() -> Result<()> {
     println!("Number of occurences of XMAS in input is: {}", number_of_occurences);
 
     assert_eq!(2406, number_of_occurences);
-    
+
     Ok(())
 }
 
@@ -34,18 +34,19 @@ fn find_all_xmas(text_map: &TextMap) -> Option<Vec<Rect>> {
             // the if-statements, because there can be multiple findings from the
             // current position in a star-like formation.
 
+            let x1 = x;
+            let y1 = y;
+
             // check NORTH
             if y >= 3 {
-                let x1 = x;
-                let y1 = y;
-                let x2 = x;
+                let x2 = x1;
                 let y2 = y1 - 3;
 
                 // get slice from (x1, y1) to (x2, y2)
                 let mut slice = String::new();
                 
                 for yn in (y2..=y1).rev() {
-                    slice.push(text_map.char_at(x, yn));
+                    slice.push(text_map.char_at(x2, yn));
                 }
 
                 // compare with 'XMAS'
@@ -56,10 +57,8 @@ fn find_all_xmas(text_map: &TextMap) -> Option<Vec<Rect>> {
 
             // check NORTH-EAST
             if y >= 3 && x < text_map.width() - 3 {
-                let x1 = x;
-                let y1 = y;
-                let x2 = x + 3;
-                let y2 = y - 3;
+                let x2 = x1 + 3;
+                let y2 = y1 - 3;
 
                 // get slice from (x1, y1) to (x2, y2)
                 let mut slice = String::new();
@@ -79,16 +78,14 @@ fn find_all_xmas(text_map: &TextMap) -> Option<Vec<Rect>> {
 
             // check EAST
             if x < text_map.width() - 3 {
-                let x1 = x;
-                let y1 = y;
-                let x2 = x + 3;
-                let y2 = y;
+                let x2 = x1 + 3;
+                let y2 = y1;
 
                 // get slice from (x1, y1) to (x2, y2)
                 let mut slice = String::new();
 
                 for xn in x1..=x2 {
-                    slice.push(text_map.char_at(xn, y));
+                    slice.push(text_map.char_at(xn, y1));
                 }
 
                 // compare with 'XMAS'
@@ -99,10 +96,8 @@ fn find_all_xmas(text_map: &TextMap) -> Option<Vec<Rect>> {
 
             // check SOUTH-EAST
             if y < text_map.height() - 3 && x < text_map.width() - 3 {
-                let x1 = x;
-                let y1 = y;
-                let x2 = x + 3;
-                let y2 = y + 3;
+                let x2 = x1 + 3;
+                let y2 = y1 + 3;
 
                 // get slice from (x1, y1) to (x2, y2)
                 let mut slice = String::new();
@@ -122,16 +117,14 @@ fn find_all_xmas(text_map: &TextMap) -> Option<Vec<Rect>> {
 
             // check SOUTH
             if y < text_map.height() - 3 {
-                let x1 = x;
-                let y1 = y;
-                let x2 = x;
-                let y2 = y + 3;
+                let x2 = x1;
+                let y2 = y1 + 3;
 
                 // get slice from (x1, y1) to (x2, y2)
                 let mut slice = String::new();
 
                 for yn in y1..=y2 {
-                    slice.push(text_map.char_at(x, yn));
+                    slice.push(text_map.char_at(x1, yn));
                 }
 
                 // compare with 'XMAS'
@@ -142,10 +135,8 @@ fn find_all_xmas(text_map: &TextMap) -> Option<Vec<Rect>> {
 
             // check SOUTH-WEST
             if y < text_map.height() - 3 && x >= 3 {
-                let x1 = x;
-                let y1 = y;
-                let x2 = x - 3;
-                let y2 = y + 3;
+                let x2 = x1 - 3;
+                let y2 = y1 + 3;
 
                 // get slice from (x1, y1) to (x2, y2)
                 let mut slice = String::new();
@@ -167,16 +158,14 @@ fn find_all_xmas(text_map: &TextMap) -> Option<Vec<Rect>> {
 
             // check WEST
             if x >= 3 {
-                let x1 = x;
-                let y1 = y;
-                let x2 = x - 3;
-                let y2 = y;
+                let x2 = x1 - 3;
+                let y2 = y1;
 
                 // get slice from (x1, y1) to (x2, y2)
                 let mut slice = String::new();
 
                 for xn in (x2..=x1).rev() {
-                    slice.push(text_map.char_at(xn, y));
+                    slice.push(text_map.char_at(xn, y1));
                 }
 
                 // compare with 'XMAS'
@@ -187,10 +176,8 @@ fn find_all_xmas(text_map: &TextMap) -> Option<Vec<Rect>> {
 
             // chest NORTH-WEST
             if y >= 3 && x >= 3 {
-                let x1 = x;
-                let y1 = y;
-                let x2 = x - 3;
-                let y2 = y - 3;
+                let x2 = x1 - 3;
+                let y2 = y1 - 3;
 
                 // get slice from (x1, y1) to (x2, y2)
                 let mut slice = String::new();
@@ -211,8 +198,6 @@ fn find_all_xmas(text_map: &TextMap) -> Option<Vec<Rect>> {
             }
         }
     }
-
-    // remove duplicate findings
 
     if occurences.is_empty() {
         None
