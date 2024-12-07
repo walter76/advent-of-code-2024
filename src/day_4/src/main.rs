@@ -1,9 +1,20 @@
-use text_map::TextMap;
-
 mod text_map;
 
-fn main() {
-    println!("Hello, world!");
+use core::num;
+
+use anyhow::Result;
+
+use text_map::TextMap;
+
+fn main() -> Result<()> {
+    let puzzle_input = aoc_core::get_input(2024, 4)?;
+
+    let text_map = TextMap::from(puzzle_input.as_str());
+    let number_of_xmas = find_all_xmas(&text_map).unwrap();
+
+    println!("Number of occurences of XMAS in input is: {}", number_of_xmas.len());
+
+    Ok(())
 }
 
 #[derive(Debug, Eq, PartialEq, Clone)]
