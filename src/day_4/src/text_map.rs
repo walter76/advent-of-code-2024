@@ -140,7 +140,6 @@ impl TextMap {
 
         TextMap::from(result.as_str())
     }
-
 }
 
 impl From<&str> for TextMap {
@@ -334,5 +333,33 @@ SAMX......";
         let text_map = TextMap::from(TEST_DATA_NORTH_WEST);
 
         assert_eq!("XMAS", text_map.slice(3, 3, 0, 0));
+    }
+
+    #[test]
+    fn slice_should_panics_when_x1_out_of_bounds() {
+        let text_map = TextMap::from(TEST_DATA_NORTH_WEST);
+
+        assert!(std::panic::catch_unwind(|| text_map.slice(10, 0, 0, 3)).is_err());
+    }
+
+    #[test]
+    fn slice_should_panics_when_y1_out_of_bounds() {
+        let text_map = TextMap::from(TEST_DATA_NORTH_WEST);
+
+        assert!(std::panic::catch_unwind(|| text_map.slice(0, 10, 0, 3)).is_err());
+    }
+
+    #[test]
+    fn slice_should_panics_when_x2_out_of_bounds() {
+        let text_map = TextMap::from(TEST_DATA_NORTH_WEST);
+
+        assert!(std::panic::catch_unwind(|| text_map.slice(0, 0, 10, 3)).is_err());
+    }
+
+    #[test]
+    fn slice_should_panics_when_y2_out_of_bounds() {
+        let text_map = TextMap::from(TEST_DATA_NORTH_WEST);
+
+        assert!(std::panic::catch_unwind(|| text_map.slice(0, 0, 0, 10)).is_err());
     }
 }
