@@ -24,6 +24,12 @@ impl TextMap {
         self.height
     }
 
+    pub fn set_char(&mut self, x: usize, y: usize, c: char) {
+        let index = self.index_of(x, y);
+
+        self.data[index] = c;
+    }
+
     pub fn slice(&self, x1: usize, y1: usize, x2: usize, y2: usize) -> String {
         let mut result = String::new();
 

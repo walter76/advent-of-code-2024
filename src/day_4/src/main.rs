@@ -16,6 +16,11 @@ fn main() -> Result<()> {
 
     assert_eq!(2406, number_of_occurences);
 
+    let all_occurences_of_x_shaped_xmas = find_all_x_shaped_xmas(&text_map).unwrap();
+    let number_of_occurences = all_occurences_of_x_shaped_xmas.len();
+
+    println!("Number of occurences of x-shaped XMAS in input is: {}", number_of_occurences);
+
     Ok(())
 }
 
@@ -158,9 +163,44 @@ fn find_all_xmas(text_map: &TextMap) -> Option<Vec<Rect>> {
     }
 }
 
+fn find_all_x_shaped_xmas(text_map: &TextMap) -> Option<Vec<Rect>> {
+    let mut occurences: Vec<Rect> = vec![];
+
+    let pattern_mas_mas = TextMap::from("M.M\n.A.\nS.S");
+    let pattern_mas_sam = TextMap::from("M.S\n.A.\nM.S");
+    let pattern_sam_mas = TextMap::from("S.M\n.A.\nS.M");
+    let pattern_sam_sam = TextMap::from("S.S\n.A.\nM.M");
+
+    for yn in 0 .. text_map.height() - 2 {
+        for xn in 0 .. text_map.width() - 2 {
+            let r = Rect::new(xn, yn, xn + 2, yn + 2);
+            let mut rect_to_match = text_map.rect(r);
+            
+            rect_to_match.set_char(1, 0, '.');
+            rect_to_match.set_char(0, 1, '.');
+            rect_to_match.set_char(2, 1, '.');
+            rect_to_match.set_char(1, 2, '.');
+
+            if rect_to_match == pattern_mas_mas
+                || rect_to_match == pattern_mas_sam
+                || rect_to_match == pattern_sam_mas
+                || rect_to_match == pattern_sam_sam
+            {
+                occurences.push(r);
+            }
+        }
+    }
+
+    if occurences.is_empty() {
+        None
+    } else {
+        Some(occurences)
+    }
+}
+
 #[cfg(test)]
 mod tests {
-    use crate::{find_all_xmas, text_map::TextMap, Rect};
+    use crate::{find_all_x_shaped_xmas, find_all_xmas, text_map::TextMap, Rect};
 
 const TEST_DATA_NORTH: &str = r"..S.......
 ..A.......
@@ -292,5 +332,14 @@ MXMXAXMASX";
         assert_eq!(
             18,
             find_all_xmas(&text_map).unwrap().len());
+    }
+
+    #[test]
+    fn find_all_x_shaped_xmas_should_find_all_occurences_in_example_data() {
+        let text_map = TextMap::from(EXAMPLE_DATA);
+
+        assert_eq!(
+            9,
+            find_all_x_shaped_xmas(&text_map).unwrap().len());
     }
 }
