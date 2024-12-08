@@ -1,9 +1,6 @@
-mod text_map;
-
 use anyhow::Result;
 
-use aoc_core::primitives::Rect;
-use text_map::TextMap;
+use aoc_core::{primitives::Rect, text_map::TextMap};
 
 fn main() -> Result<()> {
     let puzzle_input = aoc_core::get_input(2024, 4)?;
@@ -202,7 +199,9 @@ fn find_all_x_shaped_xmas(text_map: &TextMap) -> Option<Vec<Rect>> {
 
 #[cfg(test)]
 mod tests {
-    use crate::{find_all_x_shaped_xmas, find_all_xmas, text_map::TextMap, Rect};
+    use aoc_core::{primitives::Rect, text_map::TextMap};
+
+    use crate::{find_all_x_shaped_xmas, find_all_xmas};
 
 const TEST_DATA_NORTH: &str = r"..S.......
 ..A.......

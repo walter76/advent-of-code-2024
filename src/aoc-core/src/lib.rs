@@ -3,6 +3,7 @@ pub mod dijkstra;
 pub mod directed_graph;
 pub mod int_grid;
 pub mod primitives;
+pub mod text_map;
 pub mod undirected_graph;
 
 use std::{io, time::Duration};

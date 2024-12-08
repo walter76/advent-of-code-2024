@@ -1,5 +1,6 @@
-use aoc_core::primitives::Rect;
+use crate::primitives::Rect;
 
+/// A 2D grid of characters.
 #[derive(Debug, Clone, Eq, PartialEq)]
 pub struct TextMap {
     data: Vec<char>,
@@ -8,28 +9,63 @@ pub struct TextMap {
 }
 
 impl TextMap {
+    /// Returns the character at the given `x` and `y` coordinates.
+    /// 
+    /// # Arguments
+    /// 
+    /// - `x` - The x-coordinate.
+    /// - `y` - The y-coordinate.
     pub fn char_at(&self, x: usize, y: usize) -> char {
         self.data[self.index_of(x, y)]
     }
 
+    /// Returns the index of the given `x` and `y` coordinates.
+    /// 
+    /// # Arguments
+    /// 
+    /// - `x` - The x-coordinate.
+    /// - `y` - The y-coordinate.
     fn index_of(&self, x: usize, y: usize) -> usize {
         y * self.width + x
     }
 
+    /// Returns the width of the grid.
     pub fn width(&self) -> usize {
         self.width
     }
 
+    /// Returns the height of the grid.
     pub fn height(&self) -> usize {
         self.height
     }
 
+    /// Sets the character at the given `x` and `y` coordinates to `c`. This
+    /// method is not implementing any bounds checking.
+    /// 
+    /// # Arguments
+    /// 
+    /// - `x` - The x-coordinate.
+    /// - `y` - The y-coordinate.
+    /// - `c` - The character to set.
     pub fn set_char(&mut self, x: usize, y: usize, c: char) {
         let index = self.index_of(x, y);
 
         self.data[index] = c;
     }
 
+    /// Returns a slice of the grid from `(x1, y1)` to `(x2, y2)`. The method
+    /// can only handle slices that are horizontal, vertical, or diagonal with
+    /// a slope of 1 or -1. Other diagonal slices are not possible.
+    /// 
+    /// The method is checking the bounds of the slice and panics if the slice
+    /// is out of bounds.
+    /// 
+    /// # Arguments
+    /// 
+    /// - `x1` - The x-coordinate of the first point.
+    /// - `y1` - The y-coordinate of the first point.
+    /// - `x2` - The x-coordinate of the second point.
+    /// - `y2` - The y-coordinate of the second point.
     pub fn slice(&self, x1: usize, y1: usize, x2: usize, y2: usize) -> String {
         let mut result = String::new();
 
@@ -127,6 +163,17 @@ impl TextMap {
         result
     }
 
+    /// Returns a new `TextMap` that represents the rectangle defined by `r`.
+    /// Only rectangles are allowed that are normalized, i. e. the upper left
+    /// corner is `(x1, y1)` and the lower right corner is `(x2, y2)`. The
+    /// method panics if the rectangle is not normalized.
+    /// 
+    /// The method is checking the bounds of the rectangle and panics if the
+    /// rectangle is out of bounds.
+    /// 
+    /// # Arguments
+    /// 
+    /// - `r` - The rectangle to get.
     pub fn rect(&self, r: Rect) -> TextMap {
         if r.x2 < r.x1 || r.y2 < r.y1 {
             panic!("Only rectangles allowed, where the rectangle is normalized (x2 < x1 || y2 < y1): {:?}", r);
@@ -151,6 +198,12 @@ impl TextMap {
 }
 
 impl From<&str> for TextMap {
+    /// Creates a new `TextMap` from the given string. The string is expected
+    /// to have line breaks at the end of each line.
+    /// 
+    /// # Arguments
+    /// 
+    /// - `s` - The string to create the `TextMap` from.
     fn from(s: &str) -> Self {
         let lines: Vec<&str> = s.lines().collect();
         let height = lines.len();
@@ -171,9 +224,7 @@ impl From<&str> for TextMap {
 
 #[cfg(test)]
 mod tests {
-    use aoc_core::primitives::Rect;
-
-    use crate::text_map::TextMap;
+    use crate::{primitives::Rect, text_map::TextMap};
 
     const EXAMPLE_MAP: &str = r"MMMSXXMASM
 MSAMXMSMSA

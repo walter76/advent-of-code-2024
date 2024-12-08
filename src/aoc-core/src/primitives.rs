@@ -25,6 +25,14 @@ pub struct Rect {
 }
 
 impl Rect {
+    /// Creates a new `Rect` with the given coordinates.
+    /// 
+    /// # Arguments
+    /// 
+    /// - `x1` - The x-coordinate of the upper left corner.
+    /// - `y1` - The y-coordinate of the upper left corner.
+    /// - `x2` - The x-coordinate of the lower right corner.
+    /// - `y2` - The y-coordinate of the lower right corner.
     pub fn new(x1: usize, y1: usize, x2: usize, y2: usize) -> Self {
         Self {
             x1,
