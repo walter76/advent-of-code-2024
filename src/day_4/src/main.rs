@@ -21,6 +21,8 @@ fn main() -> Result<()> {
 
     println!("Number of occurences of x-shaped XMAS in input is: {}", number_of_occurences);
 
+    assert_eq!(1807, number_of_occurences);
+
     Ok(())
 }
 
