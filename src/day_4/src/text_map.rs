@@ -133,9 +133,11 @@ impl TextMap {
         let mut result = String::new();
 
         for y in r.y1..=r.y2 {
-            for x in r.x2..=r.x2 {
+            for x in r.x1..=r.x2 {
                 result.push(self.char_at(x, y));
             }
+
+            result.push('\n');
         }
 
         TextMap::from(result.as_str())
@@ -163,6 +165,8 @@ impl From<&str> for TextMap {
 
 #[cfg(test)]
 mod tests {
+    use aoc_core::primitives::Rect;
+
     use crate::text_map::TextMap;
 
     const EXAMPLE_MAP: &str = r"MMMSXXMASM
@@ -361,5 +365,53 @@ SAMX......";
         let text_map = TextMap::from(TEST_DATA_NORTH_WEST);
 
         assert!(std::panic::catch_unwind(|| text_map.slice(0, 0, 0, 10)).is_err());
+    }
+
+    const TEST_DATA_RECT: &str = r"..........
+..........
+..........
+..........";
+
+    #[test]
+    fn rect_should_panic_when_x2_less_than_x1() {
+        let text_map = TextMap::from(TEST_DATA_RECT);
+
+        assert!(std::panic::catch_unwind(|| text_map.rect(Rect::new(1, 1, 0, 0))).is_err());
+    }
+
+    #[test]
+    fn rect_should_panic_when_y2_less_than_y1() {
+        let text_map = TextMap::from(TEST_DATA_RECT);
+
+        assert!(std::panic::catch_unwind(|| text_map.rect(Rect::new(1, 1, 0, 0))).is_err());
+    }
+
+    #[test]
+    fn rect_should_panic_when_x2_out_of_bounds() {
+        let text_map = TextMap::from(TEST_DATA_RECT);
+
+        assert!(std::panic::catch_unwind(|| text_map.rect(Rect::new(0, 0, 10, 0))).is_err());
+    }
+
+    #[test]
+    fn rect_should_panic_when_y2_out_of_bounds() {
+        let text_map = TextMap::from(TEST_DATA_RECT);
+
+        assert!(std::panic::catch_unwind(|| text_map.rect(Rect::new(0, 0, 0, 10))).is_err());
+    }
+
+    const TEST_DATA_RECT_1: &str = r"..234.....
+..567.....
+..890.....
+..........";
+
+    #[test]
+    fn rect_should_get_rect_1() {
+        let text_map = TextMap::from(TEST_DATA_RECT_1);
+
+        assert_eq!(
+            TextMap::from("234\n567\n890"),
+            text_map.rect(Rect::new(2, 0, 4, 2))
+        );
     }
 }
