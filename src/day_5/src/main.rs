@@ -6,7 +6,11 @@ use parser::parse_input;
 use rule::PageOrderingRule;
 
 fn main() -> Result<()> {
-    println!("Hello, world!");
+    let puzzle_input = aoc_core::get_input(2024, 5)?;
+
+    let result = solve(&puzzle_input);
+
+    println!("{}", result);
 
     Ok(())
 }
