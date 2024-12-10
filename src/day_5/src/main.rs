@@ -1,3 +1,4 @@
+mod parser;
 mod rule;
 
 use anyhow::Result;
