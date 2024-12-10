@@ -1,4 +1,4 @@
-fn parse_page_updates(line: &str) -> Vec<i32> {
+pub fn parse_page_updates(line: &str) -> Vec<i32> {
     line.split(',')
         .map(|s| s.parse().unwrap())
         .collect()

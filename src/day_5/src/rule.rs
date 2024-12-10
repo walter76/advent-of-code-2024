@@ -4,14 +4,20 @@ pub struct PageOrderingRule {
     pub n2: i32,
 }
 
+impl PageOrderingRule {
+    pub fn new(n1: i32, n2: i32) -> Self {
+        Self { n1, n2 }
+    }
+}
+
 impl From<&str> for PageOrderingRule {
     fn from(s: &str) -> Self {
         let tokens: Vec<&str> = s.split('|').collect();
     
-        Self { 
-            n1: tokens[0].parse().unwrap(),
-            n2: tokens[1].parse().unwrap()
-        }
+        Self::new( 
+            tokens[0].parse().unwrap(),
+            tokens[1].parse().unwrap()
+        )
     }
 }
 
