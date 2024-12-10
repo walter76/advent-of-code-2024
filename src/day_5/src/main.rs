@@ -2,12 +2,33 @@ mod parser;
 mod rule;
 
 use anyhow::Result;
+use parser::parse_input;
 use rule::PageOrderingRule;
 
 fn main() -> Result<()> {
     println!("Hello, world!");
 
     Ok(())
+}
+
+fn solve(puzzle_input: &str) -> i32 {
+    let (page_ordering_rules, all_page_updates) = parse_input(puzzle_input);
+
+    let mut result = 0;
+
+    for page_update in all_page_updates.iter() {
+        if verify(page_update, &page_ordering_rules) {
+            result += get_middle_page_number(page_update);
+        }
+    }
+
+    result
+}
+
+fn get_middle_page_number(page_updates: &[i32]) -> i32 {
+    let index = page_updates.len() / 2;
+
+    page_updates[index]
 }
 
 fn verify(page_updates: &[i32], page_ordering_rules: &[PageOrderingRule]) -> bool {
@@ -34,7 +55,7 @@ fn verify_update(page_updates: &[i32], rule: &PageOrderingRule) -> bool {
 
 #[cfg(test)]
 mod tests {
-    use crate::{parser::parse_input, verify};
+    use crate::{get_middle_page_number, parser::parse_input, solve, verify};
 
     const EXAMPLE_DATA: &str = r"47|53
 97|13
@@ -105,5 +126,15 @@ mod tests {
         let (page_ordering_rules, all_page_updates) = parse_input(EXAMPLE_DATA);
 
         assert!(!verify(&all_page_updates[5], &page_ordering_rules));
+    }
+
+    #[test]
+    fn get_middle_page_number_should_return_61_for_first_page_updates() {
+        assert_eq!(61, get_middle_page_number(&vec![75,47,61,53,29]));
+    }
+
+    #[test]
+    fn solve_should_return_143_for_example_data() {
+        assert_eq!(143, solve(EXAMPLE_DATA));
     }
 }
