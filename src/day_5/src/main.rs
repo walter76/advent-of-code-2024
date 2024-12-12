@@ -55,6 +55,23 @@ fn verify_page_ordering_rule(safety_manual_update: &[i32], page_ordering_rule: &
     }
 }
 
+fn sort_by_page_order_rules(safety_manual_update: &[i32], page_ordering_rules: &[PageOrderingRule]) -> Vec<i32> {
+    let mut corrected_safety_manual_update: Vec<i32> = vec![];
+
+    for page_update in safety_manual_update.iter() {
+        let valid_followers: Vec<i32> = 
+            page_ordering_rules.iter()
+            .filter(|rule| &rule.n1 == page_update)
+            .map(|rule| rule.n2)
+            .collect();
+
+
+
+    }
+
+    corrected_safety_manual_update
+}
+
 #[cfg(test)]
 mod tests {
     use crate::{get_middle_page_number, parser::parse_input, sum_middle_page_numbers_of_valid_page_updates, verify_safety_manual_update};
