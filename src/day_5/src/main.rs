@@ -35,9 +35,9 @@ fn get_middle_page_number(page_updates: &[i32]) -> i32 {
     page_updates[index]
 }
 
-fn verify(page_updates: &[i32], page_ordering_rules: &[PageOrderingRule]) -> bool {
-    for rule in page_ordering_rules.iter() {
-        if !verify_update(page_updates, rule) {
+fn verify(safety_manual_update: &[i32], page_ordering_rules: &[PageOrderingRule]) -> bool {
+    for page_ordering_rule in page_ordering_rules.iter() {
+        if !verify_page_ordering_rule(safety_manual_update, page_ordering_rule) {
             return false;
         }
     }
@@ -45,9 +45,9 @@ fn verify(page_updates: &[i32], page_ordering_rules: &[PageOrderingRule]) -> boo
     true
 }
 
-fn verify_update(page_updates: &[i32], rule: &PageOrderingRule) -> bool {
-    if let Some(n1_pos) = page_updates.iter().position(|p| p == &rule.n1) {
-        if let Some(n2_pos) = page_updates.iter().position(|p| p == &rule.n2) {
+fn verify_page_ordering_rule(safety_manual_update: &[i32], page_ordering_rule: &PageOrderingRule) -> bool {
+    if let Some(n1_pos) = safety_manual_update.iter().position(|page_number| page_number == &page_ordering_rule.n1) {
+        if let Some(n2_pos) = safety_manual_update.iter().position(|page_number| page_number == &page_ordering_rule.n2) {
             n1_pos < n2_pos
         } else {
             true
