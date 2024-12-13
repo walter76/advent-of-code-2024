@@ -110,6 +110,14 @@ dependencies = [
 ]
 
 [[package]]
+name = "day_6"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "aoc-core",
+]
+
+[[package]]
 name = "dirs"
 version = "5.0.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
