@@ -17,6 +17,13 @@ fn main() -> Result<()> {
         "The sum of middle page numbers of valid page updates is: {}",
         sum_of_middle_page_numbers);
 
+    let sum_of_middle_page_numbers_of_invalid_page_updates =
+        sum_middle_page_numbers_of_invalid_page_updates(&puzzle_input);
+
+    println!(
+        "The sum of middle page numbers of invalid page updates is: {}",
+        sum_of_middle_page_numbers_of_invalid_page_updates);
+
     Ok(())
 }
 
