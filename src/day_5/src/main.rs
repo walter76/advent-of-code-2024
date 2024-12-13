@@ -1,6 +1,8 @@
 mod parser;
 mod rule;
 
+use std::cmp::Ordering;
+
 use anyhow::Result;
 use parser::parse_input;
 use rule::PageOrderingRule;
@@ -55,26 +57,41 @@ fn verify_page_ordering_rule(safety_manual_update: &[i32], page_ordering_rule: &
     }
 }
 
-fn sort_by_page_order_rules(safety_manual_update: &[i32], page_ordering_rules: &[PageOrderingRule]) -> Vec<i32> {
-    let mut corrected_safety_manual_update: Vec<i32> = vec![];
+fn sum_middle_page_numbers_of_invalid_page_updates(puzzle_input: &str) -> i32 {
+    let (page_ordering_rules, all_page_updates) = parse_input(puzzle_input);
 
-    for page_update in safety_manual_update.iter() {
-        let valid_followers: Vec<i32> = 
-            page_ordering_rules.iter()
-            .filter(|rule| &rule.n1 == page_update)
-            .map(|rule| rule.n2)
-            .collect();
+    all_page_updates.iter()
+        .filter(|page_update| !verify_safety_manual_update(page_update, &page_ordering_rules))
+        .map(|page_update| {
+            let sorted = sort_by_page_order_rules(page_update, &page_ordering_rules);
+            get_middle_page_number(&sorted)
+        })
+        .sum()
+}
 
+fn sort_by_page_order_rules(safety_manual_update: &Vec<i32>, page_ordering_rules: &[PageOrderingRule]) -> Vec<i32> {
+    let compare = |x: &i32, y: &i32| {
+        let (x, y) = (*x, *y);
 
+        if page_ordering_rules.contains(&PageOrderingRule::new(x, y)) {
+            Ordering::Less
+        } else if page_ordering_rules.contains(&PageOrderingRule::new(y, x)) {
+            Ordering::Greater
+        } else {
+            Ordering::Equal
+        }
+    };
 
-    }
+    let mut sorted_safety_manual_update: Vec<i32> = safety_manual_update.clone();
 
-    corrected_safety_manual_update
+    sorted_safety_manual_update.sort_by(compare);
+
+    sorted_safety_manual_update
 }
 
 #[cfg(test)]
 mod tests {
-    use crate::{get_middle_page_number, parser::parse_input, sum_middle_page_numbers_of_valid_page_updates, verify_safety_manual_update};
+    use crate::{get_middle_page_number, parser::parse_input, sum_middle_page_numbers_of_invalid_page_updates, sum_middle_page_numbers_of_valid_page_updates, verify_safety_manual_update};
 
     const EXAMPLE_DATA: &str = r"47|53
 97|13
@@ -155,5 +172,10 @@ mod tests {
     #[test]
     fn sum_middle_page_numbers_of_valid_page_updates_should_return_143_for_example_data() {
         assert_eq!(143, sum_middle_page_numbers_of_valid_page_updates(EXAMPLE_DATA));
+    }
+
+    #[test]
+    fn sum_middle_page_numbers_of_invalid_page_updates_should_return_123_for_example_data() {
+        assert_eq!(123, sum_middle_page_numbers_of_invalid_page_updates(EXAMPLE_DATA));
     }
 }
