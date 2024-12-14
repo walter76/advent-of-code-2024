@@ -35,7 +35,25 @@ enum GuardState {
     Turned,
 }
 
-// TODO: movement system as function
+fn move_guard_till_leaves_map(map: &mut TextMap) {
+    let (guard_x, guard_y) = find_start_pos(&map).unwrap();
+    let mut guard = Guard::new(guard_x, guard_y);
+
+    while move_guard(&mut guard, map) != Some(GuardState::LeftMap) {}
+}
+
+fn move_guard(guard: &mut Guard, map: &mut TextMap) -> Option<GuardState> {
+    let guard_x = guard.x();
+    let guard_y = guard.y();
+
+    match map.char_at(guard_x, guard_y) {
+        GUARD_FACING_UP => Some(up(guard, map)),
+        GUARD_FACING_RIGHT => Some(right(guard, map)),
+        GUARD_FACING_DOWN => Some(down(guard, map)),
+        GUARD_FACING_LEFT => Some(left(guard, map)),
+        _ => None,
+    }
+}
 
 fn up(guard: &mut Guard, map: &mut TextMap) -> GuardState {
     let guard_x = guard.x();
@@ -153,7 +171,7 @@ impl Guard {
 mod tests {
     use aoc_core::text_map::TextMap;
 
-    use crate::{down, find_start_pos, left, right, up, Guard, GuardState, GUARD_FACING_DOWN, GUARD_FACING_LEFT, GUARD_FACING_RIGHT, GUARD_FACING_UP, VISITED};
+    use crate::{down, find_start_pos, left, move_guard_till_leaves_map, right, up, Guard, GuardState, GUARD_FACING_DOWN, GUARD_FACING_LEFT, GUARD_FACING_RIGHT, GUARD_FACING_UP, VISITED};
 
     const EXAMPLE_DATA: &str = r"....#.....
 .........#
@@ -372,4 +390,25 @@ mod tests {
 
         assert_eq!(VISITED, map.char_at(guard_x, guard_y));
     }
+
+const VISITED_LOCATIONS: &str = r"....#.....
+....XXXXX#
+....X...X.
+..#.X...X.
+..XXXXX#X.
+..X.X.X.X.
+.#XXXXXXX.
+.XXXXXXX#.
+#XXXXXXX..
+......#X..";
+
+    #[test]
+    fn move_guard_till_leaves_map_should_mark_all_visited_locations_for_example_data() {
+        let mut map = TextMap::from(EXAMPLE_DATA);
+
+        move_guard_till_leaves_map(&mut map);
+
+        assert_eq!(TextMap::from(VISITED_LOCATIONS), map);
+    }
+
 }
