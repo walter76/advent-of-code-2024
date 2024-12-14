@@ -3,7 +3,15 @@ use aoc_core::text_map::TextMap;
 use anyhow::Result;
 
 fn main() -> Result<()> {
-    println!("Hello, world!");
+    let puzzle_input = aoc_core::get_input(2024, 6)?;
+
+    let mut map = TextMap::from(puzzle_input.as_str());
+
+    move_guard_till_leaves_map(&mut map);
+
+    println!(
+        "The guard visits {} distinct positions before leaving the mapped area.",
+        count_occurences(&map));
 
     Ok(())
 }
