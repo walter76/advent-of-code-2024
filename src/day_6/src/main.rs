@@ -28,6 +28,19 @@ fn find_start_pos(map: &TextMap) -> Option<(usize, usize)> {
     None
 }
 
+fn count_occurences(map: &TextMap) -> usize {
+    let mut count = 0;
+
+    for y in 0 .. map.height() {
+        for x in 0 .. map.width() {
+            if map.char_at(x, y) == VISITED {
+                count += 1;
+            }
+        }
+    }
+    count
+}
+
 #[derive(Eq, PartialEq, Debug, Clone)]
 enum GuardState {
     LeftMap,
@@ -171,7 +184,7 @@ impl Guard {
 mod tests {
     use aoc_core::text_map::TextMap;
 
-    use crate::{down, find_start_pos, left, move_guard_till_leaves_map, right, up, Guard, GuardState, GUARD_FACING_DOWN, GUARD_FACING_LEFT, GUARD_FACING_RIGHT, GUARD_FACING_UP, VISITED};
+    use crate::{count_occurences, down, find_start_pos, left, move_guard_till_leaves_map, right, up, Guard, GuardState, GUARD_FACING_DOWN, GUARD_FACING_LEFT, GUARD_FACING_RIGHT, GUARD_FACING_UP, VISITED};
 
     const EXAMPLE_DATA: &str = r"....#.....
 .........#
@@ -411,4 +424,12 @@ const VISITED_LOCATIONS: &str = r"....#.....
         assert_eq!(TextMap::from(VISITED_LOCATIONS), map);
     }
 
+    #[test]
+    fn count_occurences_should_return_41_for_example_data() {
+        let mut map = TextMap::from(EXAMPLE_DATA);
+
+        move_guard_till_leaves_map(&mut map);
+
+        assert_eq!(41, count_occurences(&map));
+    }
 }
