@@ -35,6 +35,8 @@ enum GuardState {
     Turned,
 }
 
+// TODO: movement system as function
+
 fn up(guard: &mut Guard, map: &mut TextMap) -> GuardState {
     let guard_x = guard.x();
     let guard_y = guard.y();
@@ -101,6 +103,28 @@ fn down(guard: &mut Guard, map: &mut TextMap) -> GuardState {
     }
 }
 
+fn left(guard: &mut Guard, map: &mut TextMap) -> GuardState {
+    let guard_x = guard.x();
+    let guard_y = guard.y();
+
+    if guard_x == 0 {
+        map.set_char(guard_x, guard_y, VISITED);
+
+        GuardState::LeftMap
+    } else if map.char_at(guard_x - 1, guard_y) == OBSTACLE {
+        map.set_char(guard_x, guard_y, GUARD_FACING_UP);
+
+        GuardState::Turned
+    } else {
+        map.set_char(guard_x, guard_y, VISITED);
+        map.set_char(guard_x - 1, guard_y, GUARD_FACING_LEFT);
+
+        guard.set_pos(guard_x - 1, guard_y);
+
+        GuardState::Moved
+    }
+}
+
 struct Guard {
     x: usize,
     y: usize,
@@ -129,7 +153,7 @@ impl Guard {
 mod tests {
     use aoc_core::text_map::TextMap;
 
-    use crate::{down, find_start_pos, right, up, Guard, GuardState, GUARD_FACING_DOWN, GUARD_FACING_LEFT, GUARD_FACING_RIGHT, GUARD_FACING_UP, VISITED};
+    use crate::{down, find_start_pos, left, right, up, Guard, GuardState, GUARD_FACING_DOWN, GUARD_FACING_LEFT, GUARD_FACING_RIGHT, GUARD_FACING_UP, VISITED};
 
     const EXAMPLE_DATA: &str = r"....#.....
 .........#
@@ -297,6 +321,51 @@ mod tests {
         let mut guard = Guard::new(guard_x, guard_y);
 
         assert_eq!(GuardState::LeftMap, down(&mut guard, &mut map));
+
+        assert_eq!(guard_x, guard.x());
+        assert_eq!(guard_y, guard.y());
+
+        assert_eq!(VISITED, map.char_at(guard_x, guard_y));
+    }
+
+    #[test]
+    fn left_is_moving_guard_left() {
+        let mut map = TextMap::from(EXAMPLE_DATA);
+        let (guard_x, guard_y) = find_start_pos(&map).unwrap();
+        let mut guard = Guard::new(guard_x, guard_y);
+
+        assert_eq!(GuardState::Moved, left(&mut guard, &mut map));
+
+        assert_eq!(guard_x - 1, guard.x());
+        assert_eq!(guard_y, guard.y());
+
+        assert_eq!(VISITED, map.char_at(guard_x, guard_y));
+        assert_eq!(GUARD_FACING_LEFT, map.char_at(guard.x(), guard.y()));
+    }
+
+    #[test]
+    fn left_is_turning_up_on_obstacle() {
+        let mut map = TextMap::from(EXAMPLE_DATA);
+        let guard_x = 3;
+        let guard_y = 3;
+        let mut guard = Guard::new(guard_x, guard_y);
+
+        assert_eq!(GuardState::Turned, left(&mut guard, &mut map));
+
+        assert_eq!(guard_x, guard.x());
+        assert_eq!(guard_y, guard.y());
+
+        assert_eq!(GUARD_FACING_UP, map.char_at(guard_x, guard_y));
+    }
+
+    #[test]
+    fn left_is_leaving_map() {
+        let mut map = TextMap::from(EXAMPLE_DATA);
+        let guard_x = 0;
+        let guard_y = 2;
+        let mut guard = Guard::new(guard_x, guard_y);
+
+        assert_eq!(GuardState::LeftMap, left(&mut guard, &mut map));
 
         assert_eq!(guard_x, guard.x());
         assert_eq!(guard_y, guard.y());
