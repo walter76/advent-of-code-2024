@@ -195,6 +195,33 @@ impl TextMap {
 
         TextMap::from(result.as_str())
     }
+
+    /// Returns the position of the given character `c` in the grid. The
+    /// position is a tuple of the x and y coordinates. If the character is
+    /// not found, `None` is returned.
+    /// 
+    /// # Arguments
+    /// 
+    /// - `c` - The character to find.
+    pub fn find_char_pos(&self, c: char) -> Option<(usize, usize)> {
+        if let Some(index) = self.data.iter().position(|ch| ch == &c) {
+            let y = index / self.width;
+            let x = index % self.width;
+
+            Some((x, y))
+        } else {
+            None
+        }
+    }
+
+    /// Returns the number of occurences of the given character `c` in the grid.
+    /// 
+    /// # Arguments
+    /// 
+    /// - `c` - The character to count.
+    pub fn count_chars(&self, c: char) -> usize {
+        self.data.iter().filter(|&ch| ch == &c).count()
+    }    
 }
 
 impl From<&str> for TextMap {
@@ -470,5 +497,64 @@ SAMX......";
             TextMap::from("234\n567\n890"),
             text_map.rect(Rect::new(2, 0, 4, 2))
         );
+    }
+
+    const TEST_DATA_FIND_POS: &str = r"..........
+....X.....
+..........
+..........";
+
+    #[test]
+    fn find_char_pos_should_return_none_for_not_found() {
+        let text_map = TextMap::from(TEST_DATA_FIND_POS);
+
+        assert_eq!(None, text_map.find_char_pos('A'));
+    }
+
+    #[test]
+    fn find_char_pos_should_return_4_1_for_x() {
+        let text_map = TextMap::from(TEST_DATA_FIND_POS);
+
+        assert_eq!(Some((4, 1)), text_map.find_char_pos('X'));
+    }
+
+    const TEST_DATA_COUNT_OCCURENCES: &str = r"XMASXMASX
+XMASXMASX
+XMASXMASX
+XMASXMASX";
+
+    #[test]
+    fn count_chars_should_return_12_for_x() {
+        let text_map = TextMap::from(TEST_DATA_COUNT_OCCURENCES);
+
+        assert_eq!(12, text_map.count_chars('X'));
+    }
+
+    #[test]
+    fn count_chars_should_return_8_for_m() {
+        let text_map = TextMap::from(TEST_DATA_COUNT_OCCURENCES);
+
+        assert_eq!(8, text_map.count_chars('M'));
+    }
+
+    #[test]
+    fn count_chars_should_return_8_for_a() {
+        let text_map = TextMap::from(TEST_DATA_COUNT_OCCURENCES);
+
+        assert_eq!(8, text_map.count_chars('A'));
+    }
+
+    #[test]
+    fn count_chars_should_return_8_for_s() {
+        let text_map = TextMap::from(TEST_DATA_COUNT_OCCURENCES);
+
+        assert_eq!(8, text_map.count_chars('S'));
+    }
+
+    #[test]
+    fn count_chars_should_return_0_for_not_found() {
+        let text_map = TextMap::from(TEST_DATA_COUNT_OCCURENCES);
+
+        assert_eq!(0, text_map.count_chars('Z'));
     }
 }

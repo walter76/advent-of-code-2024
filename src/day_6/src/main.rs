@@ -11,7 +11,7 @@ fn main() -> Result<()> {
 
     println!(
         "The guard visits {} distinct positions before leaving the mapped area.",
-        count_occurences(&map));
+        map.count_chars(VISITED));
 
     Ok(())
 }
@@ -24,31 +24,6 @@ const GUARD_FACING_RIGHT: char = '>';
 const GUARD_FACING_DOWN: char = 'v';
 const GUARD_FACING_LEFT: char = '<';
 
-fn find_start_pos(map: &TextMap) -> Option<(usize, usize)> {
-    for y in 0 .. map.height() {
-        for x in 0 .. map.width() {
-            if map.char_at(x, y) == GUARD_FACING_UP {
-                return Some((x, y));
-            }
-        }
-    }
-
-    None
-}
-
-fn count_occurences(map: &TextMap) -> usize {
-    let mut count = 0;
-
-    for y in 0 .. map.height() {
-        for x in 0 .. map.width() {
-            if map.char_at(x, y) == VISITED {
-                count += 1;
-            }
-        }
-    }
-    count
-}
-
 #[derive(Eq, PartialEq, Debug, Clone)]
 enum GuardState {
     LeftMap,
@@ -57,7 +32,7 @@ enum GuardState {
 }
 
 fn move_guard_till_leaves_map(map: &mut TextMap) {
-    let (guard_x, guard_y) = find_start_pos(&map).unwrap();
+    let (guard_x, guard_y) = map.find_char_pos(GUARD_FACING_UP).unwrap();
     let mut guard = Guard::new(guard_x, guard_y);
 
     while move_guard(&mut guard, map) != Some(GuardState::LeftMap) {}
@@ -192,7 +167,7 @@ impl Guard {
 mod tests {
     use aoc_core::text_map::TextMap;
 
-    use crate::{count_occurences, down, find_start_pos, left, move_guard_till_leaves_map, right, up, Guard, GuardState, GUARD_FACING_DOWN, GUARD_FACING_LEFT, GUARD_FACING_RIGHT, GUARD_FACING_UP, VISITED};
+    use crate::{down, left, move_guard_till_leaves_map, right, up, Guard, GuardState, GUARD_FACING_DOWN, GUARD_FACING_LEFT, GUARD_FACING_RIGHT, GUARD_FACING_UP, VISITED};
 
     const EXAMPLE_DATA: &str = r"....#.....
 .........#
@@ -204,37 +179,11 @@ mod tests {
 ........#.
 #.........
 ......#...";
-    
-    #[test]
-    fn find_start_pos_should_return_x4_y6_for_example_data() {
-        let map = TextMap::from(EXAMPLE_DATA);
-
-        assert_eq!(Some((4, 6)), find_start_pos(&map));
-    }
-
-    #[test]
-    fn find_start_pos_should_return_none_if_no_start_pos() {
-        let mut map = TextMap::from(EXAMPLE_DATA);
-
-        map.set_char(4, 6, '.');
-
-        assert_eq!(None, find_start_pos(&map));
-    }
-
-    #[test]
-    fn find_start_pos_should_return_x9_y9_for_last_map_position() {
-        let mut map = TextMap::from(EXAMPLE_DATA);
-
-        map.set_char(4, 6, '.');
-        map.set_char(9, 9, '^');
-
-        assert_eq!(Some((9, 9)), find_start_pos(&map));
-    }
 
     #[test]
     fn up_is_moving_guard_up() {
         let mut map = TextMap::from(EXAMPLE_DATA);
-        let (guard_x, guard_y) = find_start_pos(&map).unwrap();
+        let (guard_x, guard_y) = map.find_char_pos(GUARD_FACING_UP).unwrap();
         let mut guard = Guard::new(guard_x, guard_y);
 
         assert_eq!(GuardState::Moved, up(&mut guard, &mut map));
@@ -280,7 +229,7 @@ mod tests {
     #[test]
     fn right_is_moving_guard_right() {
         let mut map = TextMap::from(EXAMPLE_DATA);
-        let (guard_x, guard_y) = find_start_pos(&map).unwrap();
+        let (guard_x, guard_y) = map.find_char_pos(GUARD_FACING_UP).unwrap();
         let mut guard = Guard::new(guard_x, guard_y);
 
         assert_eq!(GuardState::Moved, right(&mut guard, &mut map));
@@ -325,7 +274,7 @@ mod tests {
     #[test]
     fn down_is_moving_guard_down() {
         let mut map = TextMap::from(EXAMPLE_DATA);
-        let (guard_x, guard_y) = find_start_pos(&map).unwrap();
+        let (guard_x, guard_y) = map.find_char_pos(GUARD_FACING_UP).unwrap();
         let mut guard = Guard::new(guard_x, guard_y);
 
         assert_eq!(GuardState::Moved, down(&mut guard, &mut map));
@@ -370,7 +319,7 @@ mod tests {
     #[test]
     fn left_is_moving_guard_left() {
         let mut map = TextMap::from(EXAMPLE_DATA);
-        let (guard_x, guard_y) = find_start_pos(&map).unwrap();
+        let (guard_x, guard_y) = map.find_char_pos(GUARD_FACING_UP).unwrap();
         let mut guard = Guard::new(guard_x, guard_y);
 
         assert_eq!(GuardState::Moved, left(&mut guard, &mut map));
@@ -433,11 +382,11 @@ const VISITED_LOCATIONS: &str = r"....#.....
     }
 
     #[test]
-    fn count_occurences_should_return_41_for_example_data() {
+    fn count_chars_should_return_41_for_example_data() {
         let mut map = TextMap::from(EXAMPLE_DATA);
 
         move_guard_till_leaves_map(&mut map);
 
-        assert_eq!(41, count_occurences(&map));
+        assert_eq!(41, map.count_chars(VISITED));
     }
 }
