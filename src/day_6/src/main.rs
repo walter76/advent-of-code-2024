@@ -13,6 +13,13 @@ fn main() -> Result<()> {
         "The guard visits {} distinct positions before leaving the mapped area.",
         map.count_chars(VISITED));
 
+    let map = TextMap::from(puzzle_input.as_str());
+    let possible_loops = detect_and_count_possible_loops(&map);
+
+    println!(
+        "There are {} possible positions to trap the guard in a loop.",
+        possible_loops);
+
     Ok(())
 }
 
@@ -33,6 +40,9 @@ enum GuardState {
 }
 
 fn detect_and_count_possible_loops(map: &TextMap) -> usize {
+    let possibilities_to_check = map.count_chars(WALKABLE);
+    let mut possibilties_checked = 0;
+
     let mut possible_loops = 0;
 
     for y in 0 .. map.height() {
@@ -44,6 +54,10 @@ fn detect_and_count_possible_loops(map: &TextMap) -> usize {
                 if move_guard_and_check_for_loop(&mut changed_map) {
                     possible_loops += 1;
                 }
+
+                possibilties_checked += 1;
+                
+                println!("checked ({}/{})", possibilties_checked, possibilities_to_check);
             }
         }
     }
