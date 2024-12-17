@@ -18,6 +18,7 @@ fn main() -> Result<()> {
 
 const OBSTACLE: char = '#';
 const VISITED: char = 'X';
+const WALKABLE: char = '.';
 
 const GUARD_FACING_UP: char = '^';
 const GUARD_FACING_RIGHT: char = '>';
@@ -29,6 +30,25 @@ enum GuardState {
     LeftMap,
     Moved,
     Turned,
+}
+
+fn detect_and_count_possible_loops(map: &TextMap) -> usize {
+    let mut possible_loops = 0;
+
+    for y in 0 .. map.height() {
+        for x in 0 .. map.height() {
+            if map.char_at(x, y) == WALKABLE {
+                let mut changed_map = map.clone();
+                changed_map.set_char(x, y, OBSTACLE);
+
+                if move_guard_and_check_for_loop(&mut changed_map) {
+                    possible_loops += 1;
+                }
+            }
+        }
+    }
+
+    possible_loops
 }
 
 fn move_guard_and_check_for_loop(map: &mut TextMap) -> bool {
@@ -195,7 +215,7 @@ impl Guard {
 mod tests {
     use aoc_core::text_map::TextMap;
 
-    use crate::{down, left, move_guard_and_check_for_loop, move_guard_till_leaves_map, right, up, Guard, GuardState, GUARD_FACING_DOWN, GUARD_FACING_LEFT, GUARD_FACING_RIGHT, GUARD_FACING_UP, VISITED};
+    use crate::{detect_and_count_possible_loops, down, left, move_guard_and_check_for_loop, move_guard_till_leaves_map, right, up, Guard, GuardState, GUARD_FACING_DOWN, GUARD_FACING_LEFT, GUARD_FACING_RIGHT, GUARD_FACING_UP, VISITED};
 
     const EXAMPLE_DATA: &str = r"....#.....
 .........#
@@ -461,4 +481,10 @@ const EXAMPLE_DATA_LOOP_2: &str = r"....#.....
         assert!(move_guard_and_check_for_loop(&mut map));
     }
 
+    #[test]
+    fn detect_and_count_possible_loops_should_return_6_for_example_data() {
+        let map = TextMap::from(EXAMPLE_DATA);
+
+        assert_eq!(6, detect_and_count_possible_loops(&map))
+    }
 }
