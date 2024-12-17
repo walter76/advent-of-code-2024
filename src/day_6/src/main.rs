@@ -31,14 +31,42 @@ enum GuardState {
     Turned,
 }
 
+fn move_guard_and_check_for_loop(map: &mut TextMap) -> bool {
+    let (guard_x, guard_y) = map.find_char_pos(GUARD_FACING_UP).unwrap();
+    let mut guard = Guard::new(guard_x, guard_y);
+    let mut guard_path: Vec<(usize, usize, char)> = Vec::new();
+
+    guard_path.push((guard.x(), guard.y(), GUARD_FACING_UP));
+
+    loop {
+        let guard_state = move_guard(&mut guard, map, &mut guard_path);
+
+        if guard_state == Some(GuardState::LeftMap) {
+            return false;
+        }
+
+        let visited =
+            (guard.x(), guard.y(), map.char_at(guard.x(), guard.y()));
+
+        if guard_path.contains(&visited) {
+            return true;
+        } else {
+            guard_path.push(visited);
+        }
+    }
+}
+
 fn move_guard_till_leaves_map(map: &mut TextMap) {
     let (guard_x, guard_y) = map.find_char_pos(GUARD_FACING_UP).unwrap();
     let mut guard = Guard::new(guard_x, guard_y);
+    let mut guard_path: Vec<(usize, usize, char)> = Vec::new();
 
-    while move_guard(&mut guard, map) != Some(GuardState::LeftMap) {}
+    guard_path.push((guard.x(), guard.y(), GUARD_FACING_UP));
+
+    while move_guard(&mut guard, map, &mut guard_path) != Some(GuardState::LeftMap) {}
 }
 
-fn move_guard(guard: &mut Guard, map: &mut TextMap) -> Option<GuardState> {
+fn move_guard(guard: &mut Guard, map: &mut TextMap, guard_path: &mut Vec<(usize, usize, char)>) -> Option<GuardState> {
     let guard_x = guard.x();
     let guard_y = guard.y();
 
@@ -167,7 +195,7 @@ impl Guard {
 mod tests {
     use aoc_core::text_map::TextMap;
 
-    use crate::{down, left, move_guard_till_leaves_map, right, up, Guard, GuardState, GUARD_FACING_DOWN, GUARD_FACING_LEFT, GUARD_FACING_RIGHT, GUARD_FACING_UP, VISITED};
+    use crate::{down, left, move_guard_and_check_for_loop, move_guard_till_leaves_map, right, up, Guard, GuardState, GUARD_FACING_DOWN, GUARD_FACING_LEFT, GUARD_FACING_RIGHT, GUARD_FACING_UP, VISITED};
 
     const EXAMPLE_DATA: &str = r"....#.....
 .........#
@@ -389,4 +417,48 @@ const VISITED_LOCATIONS: &str = r"....#.....
 
         assert_eq!(41, map.count_chars(VISITED));
     }
+
+const EXAMPLE_DATA_LOOP_1: &str = r"....#.....
+....+---+#
+....|...|.
+..#.|...|.
+....|..#|.
+....|...|.
+.#.#^---+.
+........#.
+#.........
+......#...";
+
+    #[test]
+    fn move_guard_and_check_for_loop_should_return_true_for_loop_1() {
+        let mut map = TextMap::from(EXAMPLE_DATA_LOOP_1);
+
+        assert!(move_guard_and_check_for_loop(&mut map));
+    }
+
+    #[test]
+    fn move_guard_and_check_for_loop_should_return_false_for_example_data() {
+        let mut map = TextMap::from(EXAMPLE_DATA);
+
+        assert!(!move_guard_and_check_for_loop(&mut map));
+    }
+
+const EXAMPLE_DATA_LOOP_2: &str = r"....#.....
+....+---+#
+....|...|.
+..#.|...|.
+..+-+-+#|.
+..|.|.|.|.
+.#+-^-+-+.
+......#.#.
+#.........
+......#...";
+
+    #[test]
+    fn move_guard_and_check_for_loop_should_return_true_for_loop_2() {
+        let mut map = TextMap::from(EXAMPLE_DATA_LOOP_2);
+
+        assert!(move_guard_and_check_for_loop(&mut map));
+    }
+
 }
