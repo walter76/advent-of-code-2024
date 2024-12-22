@@ -6,10 +6,60 @@ fn main() -> Result<()> {
     Ok(())
 }
 
+// XXX: Operators are always evaluated left-to-right, not according to precedence rules.
+
+// - only possibility is to try all combinations
+// - optimizations:
+//   - always left-to-right, no precendence
+//   - do multiplication first because that yields higher results and enables
+//     earlier backtracking
+
 #[derive(Debug, Clone, Eq, PartialEq)]
 struct TestEquation {
     result: i32,
     operands: Vec<i32>,
+}
+
+impl TestEquation {
+    pub fn is_valid(&self) -> bool {
+        let n = self.operands.len();
+
+        if n == 0 {
+            return true;
+        }
+
+        if n == 1 {
+            return self.operands[0] == self.result;
+        }
+
+        // there are 2^(n-1) ways to place +/* between n numbers
+        let total_combinations = 1 << (n - 1);
+
+        for mask in 0 .. total_combinations {
+            // start with the first number
+            let mut value = self.operands[0];
+
+            // for each "operator slot"
+            for i in 0 .. (n - 1) {
+                // extract the bit i from mask
+                let bit = (mask >> i) & 1;
+
+                if bit == 0 {
+                    // 0 means '+'
+                    value += self.operands[i + 1];
+                } else {
+                    // 1 means '*'
+                    value *= self.operands[i + 1];
+                }
+            }
+
+            if value == self.result {
+                return true;
+            }
+        }
+
+        false
+    }
 }
 
 impl From<&str> for TestEquation {
@@ -60,5 +110,25 @@ mod tests {
             },
             TestEquation::from(SECOND_EXAMPLE)
         );
+    }
+
+    #[test]
+    fn is_valid_should_return_true_for_first_example() {
+        let test_equation = TestEquation::from(FIRST_EXAMPLE);
+        assert!(test_equation.is_valid());
+    }
+
+    #[test]
+    fn is_valid_should_return_true_for_second_example() {
+        let test_equation = TestEquation::from(SECOND_EXAMPLE);
+        assert!(test_equation.is_valid());
+    }
+
+    const THIRD_EXAMPLE: &str = "83: 17 5";
+
+    #[test]
+    fn is_valid_should_return_false_for_third_example() {
+        let test_equation = TestEquation::from(THIRD_EXAMPLE);
+        assert!(!test_equation.is_valid());
     }
 }
