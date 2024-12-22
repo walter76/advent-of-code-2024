@@ -1,7 +1,12 @@
 use anyhow::Result;
 
 fn main() -> Result<()> {
-    println!("Hello, world!");
+    let puzzle_input = aoc_core::get_input(2024, 7)?;
+    
+    let test_equations = parse_calibration_equations(&puzzle_input);
+    let sum = sum_of_valid_test_equations(&test_equations);
+
+    println!("The total calibration result is: {}", sum);
 
     Ok(())
 }
