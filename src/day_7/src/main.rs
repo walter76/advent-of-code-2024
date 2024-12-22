@@ -11,7 +11,7 @@ fn main() -> Result<()> {
     Ok(())
 }
 
-fn sum_of_valid_test_equations(test_equations: &[TestEquation]) -> i32 {
+fn sum_of_valid_test_equations(test_equations: &[TestEquation]) -> i64 {
     test_equations.iter()
         .filter(|test_equation| test_equation.is_valid())
         .map(|test_equation| test_equation.result)
@@ -32,8 +32,8 @@ fn parse_calibration_equations(input: &str) -> Vec<TestEquation> {
 
 #[derive(Debug, Clone, Eq, PartialEq)]
 struct TestEquation {
-    result: i32,
-    operands: Vec<i32>,
+    result: i64,
+    operands: Vec<i64>,
 }
 
 impl TestEquation {
