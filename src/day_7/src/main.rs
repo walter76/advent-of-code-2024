@@ -6,6 +6,17 @@ fn main() -> Result<()> {
     Ok(())
 }
 
+fn sum_of_valid_test_equations(test_equations: &[TestEquation]) -> i32 {
+    test_equations.iter()
+        .filter(|test_equation| test_equation.is_valid())
+        .map(|test_equation| test_equation.result)
+        .sum()
+}
+
+fn parse_calibration_equations(input: &str) -> Vec<TestEquation> {
+    input.lines().map(|line| TestEquation::from(line)).collect()
+}
+
 // XXX: Operators are always evaluated left-to-right, not according to precedence rules.
 
 // - only possibility is to try all combinations
@@ -84,7 +95,7 @@ impl From<&str> for TestEquation {
 
 #[cfg(test)]
 mod tests {
-    use crate::TestEquation;
+    use crate::{parse_calibration_equations, sum_of_valid_test_equations, TestEquation};
 
     const FIRST_EXAMPLE: &str = "190: 10 19";
 
@@ -130,5 +141,21 @@ mod tests {
     fn is_valid_should_return_false_for_third_example() {
         let test_equation = TestEquation::from(THIRD_EXAMPLE);
         assert!(!test_equation.is_valid());
+    }
+
+    const EXAMPLE_DATA: &str = r"190: 10 19
+3267: 81 40 27
+83: 17 5
+156: 15 6
+7290: 6 8 6 15
+161011: 16 10 13
+192: 17 8 14
+21037: 9 7 18 13
+292: 11 6 16 20";
+
+    #[test]
+    fn sum_of_valid_test_equations_should_return_3749_for_example_data() {
+        let test_equations = parse_calibration_equations(EXAMPLE_DATA);
+        assert_eq!(3749, sum_of_valid_test_equations(&test_equations));
     }
 }
