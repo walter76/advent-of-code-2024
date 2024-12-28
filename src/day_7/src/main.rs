@@ -8,6 +8,10 @@ fn main() -> Result<()> {
 
     println!("The total calibration result is: {}", sum);
 
+    let sum = sum_of_valid_test_equations_recursive(&test_equations);
+
+    println!("The total calibration result is: {} (recursive variant)", sum);
+
     Ok(())
 }
 
