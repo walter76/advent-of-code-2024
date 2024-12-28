@@ -1,16 +1,33 @@
+use std::time::Instant;
+
 use anyhow::Result;
 
 fn main() -> Result<()> {
     let puzzle_input = aoc_core::get_input(2024, 7)?;
     
+    let start = Instant::now();
+    
     let test_equations = parse_calibration_equations(&puzzle_input);
+
+    let duration = start.elapsed();
+
+    println!("Parsing took {:?}", duration);
+
+    let start = Instant::now();
+
     let sum = sum_of_valid_test_equations(&test_equations);
 
-    println!("The total calibration result is: {}", sum);
+    let duration = start.elapsed();
+
+    println!("The total calibration result is: {} (took {:?})", sum, duration);
+
+    let start = Instant::now();
 
     let sum = sum_of_valid_test_equations_recursive(&test_equations);
 
-    println!("The total calibration result is: {} (recursive variant)", sum);
+    let duration = start.elapsed();
+
+    println!("The total calibration result is: {} (recursive variant took {:?})", sum, duration);
 
     Ok(())
 }
