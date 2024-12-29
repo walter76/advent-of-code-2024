@@ -23,7 +23,7 @@ fn main() -> Result<()> {
 
     let start = Instant::now();
 
-    let sum = sum_of_valid_test_equations_recursive(&test_equations);
+    let sum = sum_of_valid_test_equations_recursive(&test_equations, true);
 
     let duration = start.elapsed();
 
@@ -39,9 +39,9 @@ fn sum_of_valid_test_equations(test_equations: &[TestEquation]) -> i64 {
         .sum()
 }
 
-fn sum_of_valid_test_equations_recursive(test_equations: &[TestEquation]) -> i64 {
+fn sum_of_valid_test_equations_recursive(test_equations: &[TestEquation], use_concat: bool) -> i64 {
     test_equations.iter()
-        .filter(|test_equation| test_equation.is_valid_recursive())
+        .filter(|test_equation| test_equation.is_valid_recursive(use_concat))
         .map(|test_equation| test_equation.result)
         .sum()
 }
@@ -105,7 +105,7 @@ impl TestEquation {
         false
     }
 
-    pub fn is_valid_recursive(&self) -> bool {
+    pub fn is_valid_recursive(&self, use_concat: bool) -> bool {
         let n = self.operands.len();
 
         if n == 0 {
@@ -120,12 +120,12 @@ impl TestEquation {
 
         operands.reverse();
 
-        let results = self.all_combinations_recursive(&operands);
+        let results = self.all_combinations_recursive(&operands, use_concat);
 
         results.iter().any(|(_, result)| *result == self.result)
     }
 
-    fn all_combinations_recursive(&self, operands: &[i64]) -> Vec<(String, i64)> {
+    fn all_combinations_recursive(&self, operands: &[i64], use_concat: bool) -> Vec<(String, i64)> {
         // base case: if there's only one number, there's exactly
         // one expression: "num" -> its value.
         if operands.len() == 1 {
@@ -137,7 +137,7 @@ impl TestEquation {
         let tail = &operands[1 ..];
 
         // recursively get all combinations for the tail
-        let sub_combinations = self.all_combinations_recursive(tail);
+        let sub_combinations = self.all_combinations_recursive(tail, use_concat);
 
         let mut results = vec![];
 
@@ -152,6 +152,16 @@ impl TestEquation {
             let expr_mul = format!("{}*{}", first, expr);
             let val_mul = first * val;
             results.push((expr_mul, val_mul));
+
+            // using '||'
+            if use_concat {
+                let expr_concat = format!("{}||{}", first, expr);
+                let concatenated_str = format!("{}{}", val, first);
+    
+                if let Ok(concatenated_val) = concatenated_str.parse::<i64>() {
+                    results.push((expr_concat, concatenated_val));
+                }
+            }
         }
 
         results
@@ -256,7 +266,7 @@ mod tests {
                 (String::from("19+10"), 29),
                 (String::from("19*10"), 190),
             ],
-            test_equation.all_combinations_recursive(&operands));
+            test_equation.all_combinations_recursive(&operands, false));
     }
 
     #[test]
@@ -273,7 +283,7 @@ mod tests {
                 (String::from("27+40*81"), 3267),
                 (String::from("27*40*81"), 87480),
             ],
-            test_equation.all_combinations_recursive(&operands));
+            test_equation.all_combinations_recursive(&operands, false));
     }
 
     #[test]
@@ -288,30 +298,30 @@ mod tests {
                 (String::from("5+17"), 22),
                 (String::from("5*17"), 85),
             ],
-            test_equation.all_combinations_recursive(&operands));
+            test_equation.all_combinations_recursive(&operands, false));
     }
 
     #[test]
     fn is_valid_rescursive_should_return_true_for_first_example() {
         let test_equation = TestEquation::from(FIRST_EXAMPLE);
-        assert!(test_equation.is_valid_recursive());
+        assert!(test_equation.is_valid_recursive(false));
     }
 
     #[test]
     fn is_valid_recursive_should_return_true_for_second_example() {
         let test_equation = TestEquation::from(SECOND_EXAMPLE);
-        assert!(test_equation.is_valid_recursive());
+        assert!(test_equation.is_valid_recursive(false));
     }
 
     #[test]
     fn is_valid_recursive_should_return_false_for_third_example() {
         let test_equation = TestEquation::from(THIRD_EXAMPLE);
-        assert!(!test_equation.is_valid_recursive());
+        assert!(!test_equation.is_valid_recursive(false));
     }
 
     #[test]
     fn sum_of_valid_test_recursive_equations_should_return_3749_for_example_data() {
         let test_equations = parse_calibration_equations(EXAMPLE_DATA);
-        assert_eq!(3749, sum_of_valid_test_equations_recursive(&test_equations));
+        assert_eq!(3749, sum_of_valid_test_equations_recursive(&test_equations, false));
     }
 }
